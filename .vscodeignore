@@ -1,0 +1,20 @@
+.vscode/**
+.vscode-test/**
+src/**
+.gitignore
+tsconfig.json
+**/*.map
+**/*.ts
+node_modules/**
+
+# Dev tooling and config (not needed in packaged extension)
+.github/**
+.editorconfig
+.prettierrc*
+.prettierignore
+commitlint.config.*
+.pre-commit-config.yaml
+cliff.toml
+CONTRIBUTING.md
+SECURITY.md
+CHANGELOG.md

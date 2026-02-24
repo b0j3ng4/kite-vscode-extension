@@ -1,0 +1,255 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Kite",
+  "scopeName": "source.kite",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#import" },
+    { "include": "#declarations" },
+    { "include": "#override-block" },
+    { "include": "#function-calls" },
+    { "include": "#qualified-identifier" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#literals" },
+    { "include": "#object-member" },
+    { "include": "#identifiers" },
+    { "include": "#operators" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "block-body": {
+      "patterns": [
+        { "include": "#object-member" },
+        { "include": "#override-block" },
+        { "include": "#function-calls" },
+        { "include": "#qualified-identifier" },
+        { "include": "#keywords" },
+        { "include": "#types" },
+        { "include": "#literals" },
+        { "include": "#identifiers" },
+        { "include": "#operators" },
+        { "include": "#punctuation" }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.double-slash.kite", "match": "//.*$" },
+        { "name": "comment.block.kite", "begin": "/\\*", "end": "\\*/" }
+      ]
+    },
+    "import": {
+      "patterns": [
+        {
+          "name": "meta.import.kite",
+          "match": "\\b(import)\\s+",
+          "captures": { "1": { "name": "keyword.control.import.kite" } }
+        },
+        {
+          "name": "meta.import.as.kite",
+          "match": "\\b(as)\\s+([A-Za-z_][A-Za-z0-9_-]*)\\b",
+          "captures": {
+            "1": { "name": "keyword.control.as.kite" },
+            "2": { "name": "entity.name.namespace.kite" }
+          }
+        }
+      ]
+    },
+    "declarations": {
+      "patterns": [
+        {
+          "name": "meta.declaration.const.kite",
+          "match": "\\b(const)\\s+([A-Za-z_][A-Za-z0-9_-]*)\\s*=",
+          "captures": {
+            "1": { "name": "storage.modifier.kite" },
+            "2": { "name": "variable.other.constant.kite" }
+          }
+        },
+        {
+          "name": "meta.declaration.schema-from-file.kite",
+          "match": "\\b(schema)\\s+([A-Za-z_][A-Za-z0-9_-]*)\\s+(from)\\s+(\"(?:[^\"\\\\]|\\\\.)*\")\\s*;?",
+          "captures": {
+            "1": { "name": "storage.type.kite" },
+            "2": { "name": "entity.name.type.kite" },
+            "3": { "name": "keyword.control.kite" },
+            "4": { "name": "string.quoted.double.kite" }
+          }
+        },
+        {
+          "name": "meta.declaration.schema.kite",
+          "begin": "\\b(schema)\\s+([A-Za-z_][A-Za-z0-9_-]*)\\s*\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "1": { "name": "storage.type.kite" },
+            "2": { "name": "entity.name.type.kite" }
+          },
+          "patterns": [{ "include": "#block-body" }]
+        },
+        {
+          "name": "meta.declaration.resource.kite",
+          "begin": "\\b(resource)\\s+([A-Za-z_][A-Za-z0-9_-]*)(?:\\s+(using)\\s+([A-Za-z_][A-Za-z0-9_-]*(?:\\.[A-Za-z_][A-Za-z0-9_-]*)*))?(?:\\s+(for)\\s+([A-Za-z_][A-Za-z0-9_-]*)\\s+(in)\\s+[^\\{]+)?\\s*\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "1": { "name": "storage.type.kite" },
+            "2": { "name": "entity.name.type.kite" },
+            "3": { "name": "keyword.control.kite" },
+            "4": { "name": "entity.name.type.kite" },
+            "5": { "name": "keyword.control.kite" },
+            "6": { "name": "entity.name.type.kite" },
+            "7": { "name": "keyword.control.kite" }
+          },
+          "patterns": [{ "include": "#block-body" }]
+        },
+        {
+          "name": "meta.declaration.output.kite",
+          "begin": "\\b(output)\\s+\\{",
+          "end": "(\\}\\s+)(as)(\\s+)((?:json|yaml|toml)|[A-Za-z_][A-Za-z0-9_-]*)(\\s*;?)",
+          "beginCaptures": { "1": { "name": "storage.type.kite" } },
+          "endCaptures": {
+            "2": { "name": "keyword.control.as.kite" },
+            "4": { "name": "constant.other.format.kite" }
+          },
+          "patterns": [{ "include": "#block-body" }]
+        },
+        {
+          "name": "meta.declaration.output.kite",
+          "match": "\\b(output)\\s+([A-Za-z_][A-Za-z0-9_-]*)(\\.[A-Za-z_][A-Za-z0-9_-]*)*\\s+(as)\\s+((?:json|yaml|toml)|[A-Za-z_][A-Za-z0-9_-]*)(?:\\s+to\\s+(\"(?:[^\"\\\\]|\\\\.)*\"))?(\\s*;?)",
+          "captures": {
+            "1": { "name": "storage.type.kite" },
+            "2": { "name": "entity.name.namespace.kite" },
+            "3": { "name": "variable.other.member.kite" },
+            "4": { "name": "keyword.control.as.kite" },
+            "5": { "name": "constant.other.format.kite" },
+            "6": { "name": "string.quoted.double.kite" },
+            "7": { "name": "punctuation.terminator.statement.kite" }
+          }
+        }
+      ]
+    },
+    "override-block": {
+      "patterns": [
+        {
+          "name": "meta.override.kite",
+          "begin": "\\b(override)\\s*\\{",
+          "end": "\\}",
+          "beginCaptures": { "1": { "name": "keyword.control.override.kite" } },
+          "patterns": [
+            { "include": "#function-calls" },
+            { "include": "#qualified-identifier" },
+            { "include": "#strings" },
+            { "include": "#numbers" },
+            { "include": "#override-path" },
+            { "include": "#keywords" },
+            { "include": "#types" }
+          ]
+        }
+      ]
+    },
+    "override-path": {
+      "patterns": [
+        {
+          "name": "variable.parameter.override-path.kite",
+          "match": "(?:[A-Za-z_][A-Za-z0-9_-]*\\.)+[A-Za-z_][A-Za-z0-9_-]*(\\[[^\\]]+\\])?|[A-Za-z_][A-Za-z0-9_-]*\\[[^\\]]+\\]",
+          "captures": { "0": { "name": "variable.parameter.kite" } }
+        }
+      ]
+    },
+    "function-calls": {
+      "patterns": [
+        {
+          "name": "meta.function-call.builtin.kite",
+          "match": "\\b(len|concat|toString|toNumber|keys|values|merge|contains|has|lower|upper|trim|replace|min|max|abs|clamp|env|map|filter)\\s*\\(",
+          "captures": { "1": { "name": "support.function.builtin.kite" } }
+        },
+        {
+          "name": "meta.function-call.kite",
+          "match": "\\b([A-Za-z_][A-Za-z0-9_-]*)\\s*\\(",
+          "captures": { "1": { "name": "entity.name.function.kite" } }
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.kite",
+          "match": "\\b(if|then|else|for|in|override|as|to|from|using)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        { "name": "storage.type.primitive.kite", "match": "\\b(string|number|bool|any)\\b" },
+        { "name": "constant.language.boolean.kite", "match": "\\b(true|false)\\b" },
+        { "name": "constant.language.null.kite", "match": "\\bnull\\b" }
+      ]
+    },
+    "literals": {
+      "patterns": [{ "include": "#strings" }, { "include": "#numbers" }]
+    },
+    "object-member": {
+      "patterns": [
+        {
+          "name": "meta.object.member.kite",
+          "match": "\\b([A-Za-z_][A-Za-z0-9_-]*)\\s*:",
+          "captures": { "1": { "name": "variable.other.property.kite" } }
+        },
+        {
+          "name": "meta.object.member.kite",
+          "match": "\"(?:[^\"\\\\]|\\\\.)*\"\\s*:",
+          "captures": { "0": { "name": "variable.other.property.kite" } }
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        { "name": "variable.other.readwrite.kite", "match": "\\b[A-Za-z_][A-Za-z0-9_-]*\\b" }
+      ]
+    },
+    "qualified-identifier": {
+      "patterns": [
+        {
+          "name": "variable.other.readwrite.qualified.kite",
+          "match": "\\b([A-Za-z_][A-Za-z0-9_-]*)((\\.)([A-Za-z_][A-Za-z0-9_-]*))+",
+          "captures": {
+            "1": { "name": "entity.name.namespace.kite" },
+            "2": { "name": "variable.other.member.kite" },
+            "3": { "name": "punctuation.separator.property.kite" },
+            "4": { "name": "variable.other.member.kite" }
+          }
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.kite",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [{ "name": "constant.character.escape.kite", "match": "\\\\." }]
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.kite",
+      "match": "-?\\b[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?\\b"
+    },
+    "operators": {
+      "patterns": [
+        { "name": "keyword.operator.assignment.kite", "match": "=" },
+        { "name": "keyword.operator.arrow.kite", "match": "=>" },
+        { "name": "keyword.operator.comparison.kite", "match": "==|!=|>=|<=|>|<" },
+        { "name": "keyword.operator.ternary.kite", "match": "\\?" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.definition.brace.curly.kite", "match": "\\{|\\}" },
+        { "name": "punctuation.definition.brace.square.kite", "match": "\\[|\\]" },
+        { "name": "punctuation.definition.parens.kite", "match": "\\(|\\)" },
+        { "name": "punctuation.separator.comma.kite", "match": "," },
+        { "name": "punctuation.separator.property.kite", "match": "\\." },
+        { "name": "punctuation.terminator.statement.kite", "match": ";" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "name": "kite-language",
+  "displayName": "Kite Language",
+  "description": "Language support for kite configuration files",
+  "version": "0.1.0",
+  "publisher": "kite",
+  "engines": {
+    "vscode": "^1.105.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/*.kite",
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "icon": "icon.png",
+  "license": "Apache-2.0",
+  "keywords": [
+    "kite",
+    "dsl",
+    "language",
+    "lsp",
+    "syntax"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/b0j3ng4/kite-vscode-extension"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "kite.restartLanguageServer",
+        "title": "Kite: Restart Language Server"
+      }
+    ],
+    "languages": [
+      {
+        "id": "kite",
+        "aliases": [
+          "Kite",
+          "kite"
+        ],
+        "extensions": [
+          ".kite"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "kite",
+        "scopeName": "source.kite",
+        "path": "./syntaxes/kite.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "Kite",
+      "properties": {
+        "kite.kite-ls.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the kite-ls language server binary. If empty, uses kite-ls from PATH or workspace bin/."
+        }
+      }
+    },
+    "configurationDefaults": {
+      "[kite]": {
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": false
+        },
+        "editor.wordBasedSuggestions": "off",
+        "editor.semanticHighlighting.enabled": true
+      }
+    }
+  },
+  "scripts": {
+    "package": "vsce package",
+    "vscode:prepublish": "npm run compile",
+    "compile": "esbuild src/extension.ts --bundle --outfile=out/extension.js --platform=node --external:vscode --format=cjs --minify",
+    "watch": "esbuild src/extension.ts --bundle --outfile=out/extension.js --platform=node --external:vscode --format=cjs --watch",
+    "test": "npm run compile",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.2",
+    "@commitlint/config-conventional": "^20.4.2",
+    "@types/node": "^25.3.0",
+    "@types/vscode": "^1.105.0",
+    "esbuild": "^0.27.3",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^6.1.4"
+  }
+}
