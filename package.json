@@ -31,6 +31,38 @@
   "contributes": {
     "commands": [
       {
+        "command": "kite.diff",
+        "title": "Kite: Diff"
+      },
+      {
+        "command": "kite.compile",
+        "title": "Kite: Compile"
+      },
+      {
+        "command": "kite.validate",
+        "title": "Kite: Validate"
+      },
+      {
+        "command": "kite.format",
+        "title": "Kite: Format Document (kite fmt)"
+      },
+      {
+        "command": "kite.installPlugins",
+        "title": "Kite: Install Plugins"
+      },
+      {
+        "command": "kite.installModules",
+        "title": "Kite: Install Modules"
+      },
+      {
+        "command": "kite.installAll",
+        "title": "Kite: Install All"
+      },
+      {
+        "command": "kite.init",
+        "title": "Kite: Initialize Project"
+      },
+      {
         "command": "kite.restartLanguageServer",
         "title": "Kite: Restart Language Server"
       }
@@ -44,6 +76,9 @@
         ],
         "extensions": [
           ".kite"
+        ],
+        "filenamePatterns": [
+          "**/project.kite"
         ],
         "configuration": "./language-configuration.json"
       }
@@ -62,6 +97,11 @@
           "type": "string",
           "default": "",
           "description": "Path to the kite-ls language server binary. If empty, uses kite-ls from PATH or workspace bin/."
+        },
+        "kite.kite.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to kite CLI binary. If empty, uses kite from PATH."
         }
       }
     },
@@ -73,20 +113,26 @@
           "strings": false
         },
         "editor.wordBasedSuggestions": "off",
-        "editor.semanticHighlighting.enabled": true
+        "editor.semanticHighlighting.enabled": true,
+        "editor.bracketPairColorization.enabled": true,
+        "editor.guides.bracketPairs": true
       }
     }
   },
   "scripts": {
     "package": "vsce package",
-    "vscode:prepublish": "npm run compile",
-    "compile": "esbuild src/extension.ts --bundle --outfile=out/extension.js --platform=node --external:vscode --format=cjs --minify",
-    "watch": "esbuild src/extension.ts --bundle --outfile=out/extension.js --platform=node --external:vscode --format=cjs --watch",
-    "test": "npm run compile",
+    "vscode:prepublish": "npm run compile:prod",
+    "compile": "node esbuild.config.mjs",
+    "compile:prod": "cross-env NODE_ENV=production node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs watch",
+    "analyze": "node esbuild.config.mjs analyze",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run compile && npm run typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
     "@types/node": "^25.3.0",

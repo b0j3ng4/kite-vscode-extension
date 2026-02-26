@@ -3,6 +3,7 @@
 src/**
 .gitignore
 tsconfig.json
+esbuild.config.mjs
 **/*.map
 **/*.ts
 node_modules/**
