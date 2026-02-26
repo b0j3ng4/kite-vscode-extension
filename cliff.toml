@@ -18,7 +18,7 @@ body = """
             {% if commit.breaking %}[**breaking**] {% endif %}\
             {{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/b0j3ng4/kite-vscode-extension/commit/{{ commit.id }}))\
     {% endfor %}
-{% endfor %}
+{% endfor %}\n
 """
 # Remove leading and trailing whitespaces from the changelog's body.
 trim = true
